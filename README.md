@@ -1,0 +1,1 @@
+# samp-frz-linux
