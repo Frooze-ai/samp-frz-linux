@@ -1,0 +1,36 @@
+#!/bin/bash
+
+
+clear
+
+releaseOS=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
+releaseArch=$(uname -m)
+serverRunning=$(ps cax | grep samp03svr)
+osRoot="apt"
+randomRCON=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 10 | head -n 1)
+
+if [ -d ~/.samp ]; then
+    # Check if the SA-MP server is already running
+    if [[ $serverRunning == *"samp03svr"* ]]; then
+        while true; do
+            read -p "   SA-MP Server is already running. Do you want to stop it? [y/n]" yn
+            case $yn in
+                [Yy]* ) pkill samp03svr; pkill samp03svr; echo -e "\033[32m   Server has been stopped.\033[37m"; break;;
+                [Nn]* ) exit;;
+                * ) echo "Please answer yes or no."
+            esac
+        done
+    else
+        echo -e "\033[32m   Server has been started.\033[37m"
+        cd ~/.samp/samp03
+        ./samp03svr >/dev/null 2>&1 &
+    fi
+    exit
+fi
+
+echo -e "\033[37m"
+echo " Frooze's Integrated Linux Server Startup"
+echo " |"
+echo " /"
+echo " -"
+echo -e " ║ ! ║                   Use \033[32m./samp \033[37mto start/stop server"
